@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JFR ETS – Joint for Rheumatology and Reproduction</title>
+  <style>
+    :root {
+      --primary: #1a5276;
+      --primary-dark: #154360;
+      --secondary: #2e86c1;
+      --accent: #145a32;
+      --accent-bg: #d4efdf;
+      --locked-text: #78281f;
+      --locked-bg: #fadbd8;
+      --bg-light: #f4f7f9;
+      --text-main: #2c3e50;
+      --text-muted: #566573;
+      --border: #d5dbdb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-main);
+      line-height: 1.6;
+      background-color: #ffffff;
+    }
+
+    header {
+      background-color: #ffffff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .brand {
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--secondary);
+    }
+
+    .nav-cta {
+      background-color: var(--primary);
+      color: #ffffff !important;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 600 !important;
+    }
+
+    .nav-cta:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ebf5fb 0%, #f8f9fa 100%);
+      padding: 70px 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      font-size: 2.3rem;
+      color: var(--primary);
+      max-width: 900px;
+      margin: 0 auto 18px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 800px;
+      margin: 0 auto 28px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 6px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-outline {
+      background-color: #ffffff;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background-color: #ebf5fb;
+    }
+
+    section {
+      padding: 60px 20px;
+    }
+
+    section:nth-child(even) {
+      background-color: var(--bg-light);
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.9rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 40px;
+      font-size: 1.05rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card h3, .card h4 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    .role {
+      font-style: italic;
+      color: var(--secondary);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .badge-free {
+      background-color: var(--accent-bg);
+      color: var(--accent);
+    }
+
+    .badge-locked {
+      background-color: var(--locked-bg);
+      color: var(--locked-text);
+    }
+
+    .price {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 1.05rem;
+      margin: 10px 0;
+    }
+
+    /* Sezione Videoteca Formativa */
+    .featured-video-box {
+      display: flex;
+      flex-wrap: wrap;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      margin-bottom: 36px;
+    }
+
+    .video-wrapper {
+      flex: 1 1 340px;
+      background-color: #111111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 360px;
+      position: relative;
+    }
+
+    .video-wrapper video {
+      width: 100%;
+      max-height: 440px;
+      display: block;
+    }
+
+    .video-details {
+      flex: 1 1 420px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .video-details h3 {
+      color: var(--primary);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .video-meta {
+      font-size: 0.9rem;
+      color: var(--secondary);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .statuto-item {
+      background: #ffffff;
+      border-left: 4px solid var(--primary);
+      padding: 16px 20px;
+      margin-bottom: 14px;
+      border-radius: 0 8px 8px 0;
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .statuto-item h4 {
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .form-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 30px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 0.92rem;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+    }
+
+    .checkbox-group input {
+      margin-top: 4px;
+    }
+
+    footer {
+      background-color: var(--primary-dark);
+      color: #ffffff;
+      padding: 50px 20px 30px;
+    }
+
+    .footer-grid {
+      max-width: 1150px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    footer h4 {
+      margin-bottom: 14px;
+      color: #aed6f1;
+    }
+
+    footer p, footer li, footer a {
+      color: #eaf2f8;
+      font-size: 0.9rem;
+      text-decoration: none;
+      list-style: none;
+      margin-bottom: 8px;
+    }
+
+    .footer-bottom {
+      max-width: 1150px;
+      margin: 0 auto;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #d6eaf8;
+    }
+
+    .medical-disclaimer {
+      margin-top: 14px;
+      font-size: 0.8rem;
+      color: #aeb6bf;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER & NAVIGAZIONE -->
+  <header>
+    <div class="nav-container">
+      <a href="#home" class="brand">JFR ETS – Joint for Rheumatology &amp; Reproduction</a>
+      <nav>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#chi-siamo">Chi Siamo</a></li>
+          <li><a href="#comitato">Comitato Scientifico</a></li>
+          <li><a href="#statuto">Statuto</a></li>
+          <li><a href="#progetti">Progetti</a></li>
+          <li><a href="#pubblicazioni">Brochure &amp; Vademecum</a></li>
+          <li><a href="#videoteca">Video Formativi</a></li>
+          <li><a href="#corso-preparto">Corso Preparto</a></li>
+          <li><a href="#telemedicina">Telemedicina</a></li>
+          <li><a href="#diventa-socio" class="nav-cta">Diventa Socio / Dona</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <div class="container">
+      <h1>JOINT FOR RHEUMATOLOGY AND REPRODUCTION (JFR) ETS</h1>
+      <p>Tutela alle famiglie e sostegno alla genitorialità attraverso la medicina personalizzata multidisciplinare pre-concezionale e la prevenzione dei rischi ambientali (Exposoma).</p>
+      <div class="btn-group">
+        <a href="#progetti" class="btn btn-primary">Esplora i Progetti</a>
+        <a href="#videoteca" class="btn btn-outline">Guarda i Video Formativi</a>
+        <a href="#pubblicazioni" class="btn btn-outline">Scarica Guide Gratuite (PDF)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MISSIONE ONE HEALTH -->
+  <section id="missione">
+    <div class="container">
+      <h2 class="section-title">La Nostra Missione "One Health"</h2>
+      <p class="section-subtitle">Costituita originariamente come <strong>"ASR - Aborto Spontaneo Ricorrente ONLUS"</strong>, l'Associazione opera oggi come Ente del Terzo Settore (D.Lgs. 117/2017) per favorire la natalità rimuovendo gli ostacoli clinici e ambientali che gravano sui potenziali genitori, con particolare attenzione alle persone affette da malattie reumatiche autoimmuni (Lupus, Artrite Reumatoide, APS).</p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Medicina Personalizzata Multidisciplinare</h3>
+          <p>Ottimizzazione dei protocolli clinici reumatologici in fase pre-concezionale per ridurre i tempi di attesa e i rischi infiammatori.</p>
+        </div>
+        <div class="card">
+          <h3>Studio dell'Exposoma</h3>
+          <p>Monitoraggio dell'impatto di inquinanti atmosferici e perturbatori endocrini sul sistema immunitario e sulla capacità riproduttiva.</p>
+        </div>
+        <div class="card">
+          <h3>Accompagnamento Nascita</h3>
+          <p>Percorsi integrati tra reumatologia e ostetricia, incluso il supporto nel "terzo trimestre" per prevenire i flare post-parto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHI SIAMO & GOVERNANCE -->
+  <section id="chi-siamo">
+    <div class="container">
+      <h2 class="section-title">Chi Siamo &amp; Governance</h2>
+      <p class="section-subtitle">Continuità giuridica ed evoluzione scientifica al servizio delle famiglie.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Continuità Giuridica ed Evoluzione Scientifica</h3>
+          <p>L'Associazione nasce come <strong>"ASR - Aborto Spontaneo Ricorrente ONLUS"</strong> (Codice Fiscale 97172940583). L'Assemblea Straordinaria dei soci del 2 novembre 2026 ha deliberato il cambio di denominazione in <strong>"JOINT FOR RHEUMATOLOGY AND REPRODUCTION (JFR) ETS"</strong>, adeguando integralmente lo Statuto al Codice del Terzo Settore (D.Lgs. 117/2017) e richiedendo l'iscrizione nella sezione "Altri Enti del Terzo Settore" del RUNTS.</p>
+          <p>La sede legale dell'Associazione è situata in <strong>Roma, Piazza Verbano 22 (CAP 00199)</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Organi Sociali in Carica</h3>
+          <p><strong>Presidente e Legale Rappresentante:</strong> Prof.ssa Caterina De Carolis</p>
+          <p><strong>Vicepresidente e Segretario:</strong> Dott. Mauro Romani</p>
+          <p><strong>Tesoriere:</strong> Dott. Francesco Ventorino</p>
+          <a href="#statuto" class="btn btn-outline" style="margin-top: 10px; width: fit-content;">Consulta lo Statuto Ufficiale</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMITATO TECNICO-SCIENTIFICO -->
+  <section id="comitato">
+    <div class="container">
+      <h2 class="section-title">Comitato Tecnico-Scientifico</h2>
+      <p class="section-subtitle">Organo consultivo composto da specialisti di comprovata competenza nelle materie dell'oggetto sociale (Art. 12 dello Statuto).</p>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Prof.ssa Caterina De Carolis</h3>
+          <span class="role">Specialista in Ginecologia, Ostetricia e Pediatria – Presidente JFR ETS</span>
+          <p>Coordina i percorsi clinici integrati per la tutela della fertilità e la gestione delle gravidanze ad alto rischio immunologico e ostetrico.</p>
+        </div>
+        <div class="card">
+          <h3>Dott. Carlo Perricone, MD, PhD</h3>
+          <span class="role">Specialista in Reumatologia</span>
+          <p>Responsabile dei protocolli di Medicina Personalizzata Multidisciplinare Pre-concezionale e del monitoraggio terapeutico nelle patologie reumatiche autoimmuni.</p>
+        </div>
+        <div class="card">
+          <h3>Dott.ssa Giovanna Tranfo</h3>
+          <span class="role">Specialista in Biochimica Clinica ed Esperta in Igiene del Lavoro e Ambientale</span>
+          <p>Coordina l'Osservatorio sull'Exposoma e le linee guida di prevenzione ambientale contro i perturbatori endocrini e gli inquinanti.</p>
+        </div>
+        <div class="card">
+          <h3>Dott.ssa Marta Filidei</h3>
+          <span class="role">Specialista in Neurologia</span>
+          <p>Cura la valutazione delle comorbilità neurologiche delle malattie autoimmuni sistemiche durante la fase fertile, la gravidanza e il puerperio.</p>
+        </div>
+        <div class="card">
+          <h3>Dott.ssa Alessandra Zannetti</h3>
+          <span class="role">Ostetrica</span>
+          <p>Coordina l'Accompagnamento Multidisciplinare alla Nascita, il supporto all'allattamento e l'assistenza alle neo-madri nel "terzo trimestre".</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NUOVA SEZIONE DEDICATA ALLE PUBBLICAZIONI VIDEO FORMATIVE -->
+  <section id="videoteca">
+    <div class="container">
+      <h2 class="section-title">Video Formativi &amp; Percorso "Nascere oltre l'attesa"</h2>
+      <p class="section-subtitle">Lezioni video e incontri formativi realizzati dai professionisti di JFR ETS per accompagnare le coppie nella gestione clinica ed emotiva della vulnerabilità riproduttiva.</p>
+
+      <!-- VIDEO CARICATO IN EVIDENZA -->
+      <div class="featured-video-box">
+        <div class="video-wrapper">
+          <!-- Inserisci il percorso locale o URL del tuo file video nell'attributo src -->
+          <video controls preload="metadata">
+            <source src="nascere-oltre-attesa-incontro-1.mp4" type="video/mp4">
+            Il tuo browser non supporta il tag video HTML5.
+          </video>
+        </div>
+        <div class="video-details">
+          <span class="badge badge-free">Video Pubblico – Primo Incontro</span>
+          <h3>Corso "Nascere oltre l'attesa" – Incontro 1: Accoglienza e Gestione dell'Ansia Clinica</h3>
+          <div class="video-meta">A cura di JFR ETS – Area Ostetrico-Ginecologica e Supporto Emotivo</div>
+          <p>Uno spazio protetto creato appositamente per chi affronta il cammino verso la genitorialità dopo l'esperienza dolorosa della perdita spontanea ricorrente.</p>
+          <p>In questo primo appuntamento affrontiamo la fatica psicologica della vulnerabilità riproduttiva, l'ansia oppressiva e il senso di allerta costante che spesso accompagnano i controlli clinici e ogni singolo sintomo del corpo.</p>
+          <div class="btn-group" style="justify-content: flex-start; margin-top: 12px;">
+            <a href="#diventa-socio" class="btn btn-primary">Iscriviti per Accedere a Tutti i Video</a>
+            <a href="#pubblicazioni" class="btn btn-outline">Scarica Materiale Didattico</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATALOGO MODULI VIDEO SUCCESSIVI -->
+      <div class="grid-3">
+        <div class="card">
+          <div>
+            <span class="badge badge-locked">🔒 Riservato ai Soci</span>
+            <h4>Incontro 2: Immunologia dell'Impianto e Finestra di Remissione</h4>
+            <p>Approfondimento medico-scientifico su come preparare il sistema immunitario materno al concepimento e ridurre il rischio di poliabortività.</p>
+          </div>
+          <a href="#diventa-socio" class="btn btn-outline">Sblocca con Quota Socio (€ 10)</a>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="badge badge-locked">🔒 Riservato ai Soci</span>
+            <h4>Incontro 3: Protezione dall'Exposoma nella Vita Quotidiana</h4>
+            <p>Video-guida pratica per individuare ed eliminare i perturbatori endocrini domestici (BPA, ftalati, PFAS) che interferiscono con la fertilità.</p>
+          </div>
+          <a href="#diventa-socio" class="btn btn-outline">Sblocca con Quota Socio (€ 10)</a>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="badge badge-locked">🔒 Riservato ai Soci</span>
+            <h4>Incontro 4: Terapie Reumatiche Sicure e Post-Parto</h4>
+            <p>Gestione dei farmaci biologici e immunomodulatori in gravidanza e prevenzione delle riacutizzazioni (flare) nel terzo trimestre.</p>
+          </div>
+          <a href="#diventa-socio" class="btn btn-outline">Sblocca con Quota Socio (€ 10)</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGETTI OPERATIVI -->
+  <section id="progetti">
+    <div class="container">
+      <h2 class="section-title">Oggetto Sociale e Progetti Operativi</h2>
+      <p class="section-subtitle">Le quattro aree strategiche di intervento clinico, scientifico e divulgativo di JFR ETS.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>1. Osservatorio Exposoma &amp; Fertilità</h3>
+          <p>Monitoraggio dell'impatto dei fattori ambientali (inquinanti atmosferici, perturbatori endocrini, stili di vita) sul sistema immunitario e riproduttivo con approccio "One Health".</p>
+        </div>
+        <div class="card">
+          <h3>2. Clinica Personalizzata Multidisciplinare Pre-Concezionale</h3>
+          <p>Protocolli clinici reumatologici per ottimizzare le terapie in fase di ricerca di gravidanza, abbattendo infertilità e poliabortività legate all'infiammazione cronica.</p>
+        </div>
+        <div class="card">
+          <h3>3. Sportello "Terzo Trimestre" &amp; Mutuo Aiuto</h3>
+          <p>Percorsi integrati tra reumatologia e ostetricia nel post-parto per prevenire riacutizzazioni (flare) e reti tra pari per il supporto psicologico.</p>
+        </div>
+        <div class="card">
+          <h3>4. Scienza in Scena &amp; Editoria Sociale</h3>
+          <p>Convegni, spettacoli teatrali scientifici, manuali di "ecologia quotidiana" e advocacy istituzionale a favore della natalità.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BROCHURE & VADEMECUM -->
+  <section id="pubblicazioni">
+    <div class="container">
+      <h2 class="section-title">Brochure &amp; Vademecum Scientifici</h2>
+      <p class="section-subtitle">Pubblicazioni gratuite dell'Associazione redatte dal Prof. Carlo Perricone e dalla Dott.ssa Giovanna Tranfo.</p>
+      <div class="grid-2">
+        <div class="card">
+          <div>
+            <h3>Brochure: L'Exposoma e la Salute Riproduttiva</h3>
+            <span class="role">A firma della Dott.ssa Giovanna Tranfo e del Prof. Carlo Perricone</span>
+            <p>Guida pratica di ecologia quotidiana in 10 regole per proteggere la fertilità e la gravidanza dai perturbatori endocrini (BPA, ftalati, PFAS, pesticidi e inquinanti indoor).</p>
+          </div>
+          <a href="#diventa-socio" class="btn btn-primary" style="width: fit-content;">Richiedi Brochure Exposoma</a>
+        </div>
+        <div class="card">
+          <div>
+            <h3>Vademecum: Malattie Reumatiche Autoimmuni e Gravidanza</h3>
+            <span class="role">A firma del Prof. Carlo Perricone e della Dott.ssa Giovanna Tranfo</span>
+            <p>Manuale clinico sulla programmazione pre-concezionale, la finestra di remissione di 6 mesi, la sicurezza dei farmaci biologici e il monitoraggio del "terzo trimestre".</p>
+          </div>
+          <a href="#diventa-socio" class="btn btn-primary" style="width: fit-content;">Richiedi Vademecum Reumatologia</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORSO DI PREPARAZIONE AL PARTO MULTIDISCIPLINARE -->
+  <section id="corso-preparto">
+    <div class="container">
+      <h2 class="section-title">Corso di Preparazione al Parto Multidisciplinare</h2>
+      <p class="section-subtitle">Consulta gratuitamente i sommi capi dei moduli. L'accesso integrale alle video-lezioni HD e alle dispense è incluso nella quota associativa.</p>
+      <div class="grid-2">
+        <div class="card">
+          <span class="badge badge-free">Gratuito - Sommi Capi</span>
+          <h4>Modulo 1: Immunologia della Gravidanza e Primo Trimestre</h4>
+          <p><strong>Sintesi aperta:</strong> Adattamento del sistema immunitario materno all'impianto embrionale e prevenzione dei rischi ostetrici precoci (Prof.ssa C. De Carolis).</p>
+        </div>
+        <div class="card">
+          <span class="badge badge-free">Gratuito - Sommi Capi</span>
+          <h4>Modulo 2: Exposoma Domestico e Terapie Reumatiche</h4>
+          <p><strong>Sintesi aperta:</strong> Riduzione dei perturbatori endocrini in casa e gestione sicura dei farmaci immunomodulatori in gravidanza (Dott.ssa G. Tranfo &amp; Dott. C. Perricone).</p>
+        </div>
+        <div class="card">
+          <span class="badge badge-locked">🔒 Percorso Completo</span>
+          <h4>Modulo 3: Travaglio, Parto e Biomeccanica</h4>
+          <p>Video-lezioni pratiche di respirazione, gestione del dolore, posizioni libere e piano del parto per gestanti con patologie croniche (Ostetrica A. Zannetti).</p>
+        </div>
+        <div class="card">
+          <span class="badge badge-locked">🔒 Percorso Completo</span>
+          <h4>Modulo 4: Il "Terzo Trimestre", Allattamento e Prevenzione Flare</h4>
+          <p>Protocolli clinici nel puerperio, compatibilità farmacologica con l'allattamento e supporto neuro-emotivo post-parto (Comitato Scientifico JFR).</p>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="#diventa-socio" class="btn btn-primary">Iscriviti per Sbloccare il Corso Completo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TELEMEDICINA -->
+  <section id="telemedicina">
+    <div class="container">
+      <h2 class="section-title">Sportello Soci &amp; Servizi in Telemedicina</h2>
+      <p class="section-subtitle"><strong>Livello 1 – Gratuito per i Soci:</strong> Orientamento informativo e comportamentale. <strong>Livello 2 – Televisite Specialistiche:</strong> Prestazioni erogate a distanza con regolare fattura sanitaria (Esente IVA Art. 10 n. 18 D.P.R. 633/72).</p>
+      <div class="grid-3">
+        <div class="card">
+          <div>
+            <span class="role">Reumatologia • Dott. C. Perricone</span>
+            <h4>Televisita Pre-concezionale Personalizzata</h4>
+            <p>Valutazione remissione clinica e stabilità immunologica prima della gravidanza.</p>
+          </div>
+          <div>
+            <div class="price">€ 120,00 (Esente IVA Art. 10)</div>
+            <a href="#diventa-socio" class="btn btn-outline">Prenota</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="role">Reumatologia • Dott. C. Perricone</span>
+            <h4>Rimodulazione Terapia Biologica</h4>
+            <p>Adattamento farmaci DMARDs e biologici per concepimento e gestazione.</p>
+          </div>
+          <div>
+            <div class="price">€ 100,00 (Esente IVA Art. 10)</div>
+            <a href="#diventa-socio" class="btn btn-outline">Prenota</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="role">Reumatologia • Dott. C. Perricone</span>
+            <h4>Telemonitoraggio "Terzo Trimestre"</h4>
+            <p>Controllo post-parto per prevenzione riacutizzazioni (flare) e sicurezza allattamento.</p>
+          </div>
+          <div>
+            <div class="price">€ 90,00 (Esente IVA Art. 10)</div>
+            <a href="#diventa-socio" class="btn btn-outline">Prenota</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="role">Teleconsulto Congiunto • Reuma + Gine</span>
+            <h4>Consulto Multidisciplinare di Coppia</h4>
+            <p>Valutazione simultanea reumatologica e ginecologica per casi complessi.</p>
+          </div>
+          <div>
+            <div class="price">€ 180,00 (Esente IVA Art. 10)</div>
+            <a href="#diventa-socio" class="btn btn-outline">Prenota</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="role">Ginecologia • Prof.ssa C. De Carolis</span>
+            <h4>Second Opinion Poliabortività</h4>
+            <p>Revisione referti immunologici, trombofilici e storia ostetrica ricorrente.</p>
+          </div>
+          <div>
+            <div class="price">€ 130,00 (Esente IVA Art. 10)</div>
+            <a href="#diventa-socio" class="btn btn-outline">Prenota</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="role">Ginecologia • Prof.ssa C. De Carolis</span>
+            <h4>Inquadramento Fertilità &amp; Autoimmunità</h4>
+            <p>Piano diagnostico pre-concezionale mirato alla riserva ovarica e recettività.</p>
+          </div>
+          <div>
+            <div class="price">€ 110,00 (Esente IVA Art. 10)</div>
+            <a href="#diventa-socio" class="btn btn-outline">Prenota</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="role">Ostetricia • Dott.ssa A. Zannetti</span>
+            <h4>Piano del Parto Personalizzato</h4>
+            <p>Stesura condivisa del percorso nascita per gestanti con patologie reumatiche.</p>
+          </div>
+          <div>
+            <div class="price">€ 65,00 (Esente IVA Art. 10)</div>
+            <a href="#diventa-socio" class="btn btn-outline">Prenota</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="role">Exposoma • Dott.ssa G. Tranfo</span>
+            <h4>Audit Ambientale Domestico</h4>
+            <p>Mappatura personalizzata di BPA, ftalati, PFAS e COV in cucina e casa.</p>
+          </div>
+          <div>
+            <div class="price">€ 80,00 (Consulenza Tecnica)</div>
+            <a href="#diventa-socio" class="btn btn-outline">Prenota</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div>
+            <span class="role">Neurologia • Dott.ssa M. Filidei</span>
+            <h4>Televisita Cefalea ed Emicrania in Gravidanza</h4>
+            <p>Gestione sicura degli attacchi emicranici nel pre-concepimento e gestazione.</p>
+          </div>
+          <div>
+            <div class="price">€ 110,00 (Esente IVA Art. 10)</div>
+            <a href="#diventa-socio" class="btn btn-outline">Prenota</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATUTO -->
+  <section id="statuto">
+    <div class="container">
+      <h2 class="section-title">Statuto dell'Associazione JFR ETS</h2>
+      <p class="section-subtitle">Testo coordinato adeguato al D.Lgs. 117/2017 (Codice del Terzo Settore). L'accettazione dello Statuto è requisito obbligatorio per l'iscrizione a socio.</p>
+      <div class="statuto-item">
+        <h4>ART. 1 - DENOMINAZIONE, SEDE E QUALIFICA</h4>
+        <p>L'Associazione assume la denominazione "JOINT FOR RHEUMATOLOGY AND REPRODUCTION (JFR) ETS", ha sede legale nel Comune di Roma e utilizza obbligatoriamente l'acronimo ETS.</p>
+      </div>
+      <div class="statuto-item">
+        <h4>ART. 2 - DURATA</h4>
+        <p>La durata dell'Associazione è illimitata.</p>
+      </div>
+      <div class="statuto-item">
+        <h4>ART. 3 - FINALITÀ E SCOPI</h4>
+        <p>Senza scopo di lucro, persegue finalità civiche, solidaristiche e di utilità sociale per garantire tutela alle famiglie e sostegno alla genitorialità, con focus su malattie reumatiche autoimmuni e prevenzione dei rischi ambientali.</p>
+      </div>
+      <div class="statuto-item">
+        <h4>ART. 4 - OGGETTO SOCIALE E ATTIVITÀ DI INTERESSE GENERALE</h4>
+        <p>1. Salute Integrata, Reumatologia e malattie rare, Prevenzione Ambientale (Exposoma e Medicina Personalizzata Multidisciplinare Pre-concezionale); 2. Accompagnamento Multidisciplinare alla Nascita e Gruppi di Auto-Mutuo-Aiuto; 3. Informazione, Formazione e Ricerca Scientifica; 4. Advocacy, Politiche per la Natalità ed Editoria Sociale.</p>
+      </div>
+      <div class="statuto-item">
+        <h4>ART. 5 &amp; 6 - SOCI: AMMISSIONE, DIRITTI E DOVERI</h4>
+        <p>Possono essere soci persone fisiche ed ETS previa domanda scritta deliberata dal Consiglio Direttivo. I soci maggiorenni hanno diritto di voto in Assemblea e l'obbligo di versare la quota associativa annuale.</p>
+      </div>
+      <div class="statuto-item">
+        <h4>ART. 7 - 15 - ORGANI, PATRIMONIO E BILANCIO</h4>
+        <p>Assemblea dei Soci, Consiglio Direttivo (3-5 membri, 3 anni), Presidente, Comitato Tecnico-Scientifico. Divieto di distribuzione utili. Bilancio entro il 30 aprile.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ISCRIZIONE SOCI E DONAZIONI -->
+  <section id="diventa-socio">
+    <div class="container">
+      <h2 class="section-title">Iscrizione Soci e Donazioni Liberali</h2>
+      <p class="section-subtitle">Aderire a <strong>JFR ETS</strong> (€ 10,00/anno) o donare significa finanziare ricerca scientifica indipendente, accedere alla videoteca formativa integrale e sostenere le famiglie.</p>
+      <div class="form-box">
+        <form onsubmit="event.preventDefault(); alert('Modulo compilato. Collega il gateway di pagamento per completare il versamento.');">
+          <div class="form-group">
+            <label for="tipo">Tipologia di Versamento</label>
+            <select id="tipo" name="tipo">
+              <option value="quota">Quota Associativa Annuale Socio (€ 10,00 – Non detraibile)</option>
+              <option value="donazione">Erogazione Liberale / Donazione (Detraibile/Deducibile Art. 83 CTS)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="nome">Nome e Cognome / Ragione Sociale</label>
+            <input type="text" id="nome" name="nome" required>
+          </div>
+          <div class="form-group">
+            <label for="cf">Codice Fiscale / Partita IVA</label>
+            <input type="text" id="cf" name="cf" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Indirizzo Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="importo">Importo Versamento / Donazione (€)</label>
+            <input type="number" id="importo" name="importo" value="10" min="1" required>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="accettazione" required>
+            <label for="accettazione"><strong>Accettazione Statuto:</strong> Dichiaro di aver letto integralmente lo Statuto di JFR ETS e di accettarne ogni articolo e finalità.</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="gdpr" required>
+            <label for="gdpr"><strong>Consenso GDPR:</strong> Autorizzo il trattamento dei dati personali per gli adempimenti associativi e il rilascio della ricevuta di incasso.</label>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Completa Versamento e Genera Ricevuta</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>JOINT FOR RHEUMATOLOGY AND REPRODUCTION (JFR) ETS</h4>
+        <p>Ente del Terzo Settore (D.Lgs. 117/2017) – Già "ASR - Aborto Spontaneo Ricorrente ONLUS"</p>
+        <p>Sede Legale: Piazza Verbano 22, 00199 Roma</p>
+        <p>Codice Fiscale: 97172940583</p>
+      </div>
+      <div>
+        <h4>Documenti</h4>
+        <ul>
+          <li><a href="#statuto">Statuto JFR ETS</a></li>
+          <li><a href="#pubblicazioni">Brochure Exposoma</a></li>
+          <li><a href="#pubblicazioni">Vademecum Reumatologia</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Navigazione</h4>
+        <ul>
+          <li><a href="#comitato">Comitato Tecnico-Scientifico</a></li>
+          <li><a href="#videoteca">Video Formativi</a></li>
+          <li><a href="#corso-preparto">Corso Preparto</a></li>
+          <li><a href="#telemedicina">Sportello Telemedicina</a></li>
+          <li><a href="#diventa-socio">Diventa Socio / Dona</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 JOINT FOR RHEUMATOLOGY AND REPRODUCTION (JFR) ETS | Iscrizione RUNTS – Sezione Altri Enti del Terzo Settore</p>
+      <p class="medical-disclaimer">This is for informational purposes only. For medical advice or diagnosis, consult a professional. AI responses may include mistakes.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
